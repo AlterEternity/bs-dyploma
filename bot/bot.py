@@ -1,6 +1,7 @@
 import telebot
 
-from bot import config
+import handlers
 
 
-bot = telebot.TeleBot(config.token)
+if __name__ == '__main__':
+    handlers.bot.polling()
