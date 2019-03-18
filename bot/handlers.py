@@ -13,7 +13,7 @@ bot = telebot.TeleBot(botconfig.token)
 @bot.message_handler(commands=['start', 'help'])
 def display_start(message):
     """
-    Displays starting message for user
+    Displays starting message for user. Getting event name in dictionary
     :param message:
     """
     bot.send_message(message.chat.id, "Hello World!")
@@ -31,6 +31,14 @@ def display_start(message):
     EVENT_INFO = dict()
     CURRENT_STATE = DEFAULT_STATE
 
+
+@bot.message_handler(func=lambda x: CURRENT_STATE == botconfig.State.S_ENTER_EVENT_NAME)
+def get_event_date(message):
+    """
+    Getting event date to add it to dictionary
+    :param message:
+    """
+    pass
 
 
 
