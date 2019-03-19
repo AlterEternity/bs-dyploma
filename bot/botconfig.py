@@ -23,8 +23,9 @@ class State(enumerate):
     States: Start, Enter_event_name, Enter_date, Choose_event, Choose_tickets, Order_tickets
     """
     S_START = 0
-    S_ENTER_EVENT_NAME = 1
-    S_ENTER_DATE = 2
-    S_CHOOSE_EVENT = 3
-    S_CHOOSE_TICKETS = 4
-    S_ORDER_TICKETS = 5
+    S_ENTER_LANG = 1
+    S_ENTER_EVENT_NAME = 2
+    S_ENTER_DATE = 3
+    S_CHOOSE_EVENT = 4
+    S_CHOOSE_TICKETS = 5
+    S_ORDER_TICKETS = 6
