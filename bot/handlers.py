@@ -27,7 +27,6 @@ def display_start(message):
     ukr = telebot.types.InlineKeyboardButton(text="Українська", callback_data='ukr')
     inline.add(rus, eng, ukr)
     bot.send_message(message.chat.id, "Hello world!", reply_markup=inline)
-    CURRENT_STATE = botconfig.State.S_ENTER_LANG
     CHAT_ID = message.chat.id
 
 
@@ -49,8 +48,7 @@ def get_event_name(message):
     Getting event name to add it to dictionary
     :param message:
     """
-    print("I'm in")
-    bot.send_message(message.chat.id, "Please enter the name of event you want to go...")
+    bot.send_message(message.chat.id, "Okay, saving it")
     EVENT_INFO.update({'name': message.text})
     print(EVENT_INFO)
 
@@ -65,11 +63,13 @@ def get_event_date(message):
     pass
 
 
-@bot.callback_query_handler(func=lambda call: True)  # doesn't work
+@bot.callback_query_handler(func=lambda call: True)
 def set_language(call):
-    global LANGUAGE
+    global LANGUAGE, CURRENT_STATE, CHAT_ID
     if call.message:
         LANGUAGE = call.data
+        bot.send_message(CHAT_ID, "Please enter the name of event you want to go...")
+        CURRENT_STATE = botconfig.State.S_ENTER_LANG
 
 
 
