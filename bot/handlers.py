@@ -1,6 +1,8 @@
 import telebot
 
+
 from bot import botconfig
+from bot import parsing
 
 
 # TODO: store state in DB
@@ -9,6 +11,8 @@ CURRENT_STATE = DEFAULT_STATE
 LANGUAGE = None
 CHAT_ID = None
 EVENT_INFO = dict()
+EVENT_INFO_SITE = []
+FOR_PARSE = None
 
 
 bot = telebot.TeleBot(botconfig.TOKEN)
@@ -48,12 +52,15 @@ def get_event_name(message):
     Getting event name to add it to dictionary
     :param message:
     """
-    global CURRENT_STATE, EVENT_INFO
+    global CURRENT_STATE, EVENT_INFO, FOR_PARSE
     EVENT_INFO.update({'name': message.text})
     bot.send_message(CHAT_ID, "Okay, saving it")
     bot.send_message(CHAT_ID, "Which date you want to attend?")
     print(EVENT_INFO)
     CURRENT_STATE = botconfig.State.S_ENTER_EVENT_NAME
+    # getting text of response
+    FOR_PARSE = parsing.http_get(EVENT_INFO['name'])
+    print(FOR_PARSE)
 
 
 @bot.message_handler(func=lambda x: CURRENT_STATE == botconfig.State.S_ENTER_EVENT_NAME)
