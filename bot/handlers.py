@@ -19,7 +19,7 @@ FOR_PARSE = None
 bot = telebot.TeleBot(botconfig.TOKEN)
 
 
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['start'])
 def display_start(message):
     """
     Displays starting message for user. Getting event name in dictionary
