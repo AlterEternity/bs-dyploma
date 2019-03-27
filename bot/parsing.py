@@ -9,10 +9,19 @@ def http_get(search):
     return conn.text
 
 
-def parse_html(text):
+def get_param(element: str, key='text', default=None, **kwargs: str) -> str:
+    return getattr(element.find(**kwargs), key, default)
+
+
+def parse_html(text: str) -> list:
     soup = BeautifulSoup(text, 'html.parser')
-    all_events = soup.findAll(class_='event')
-    event_dates = []
-    for event in all_events:
-            for td in event.findAll(class_='event__date'):
-                event_dates.append(td.text)
+    event_info = []
+    for event in soup.find_all('a', class_='event'):
+        event_info.append({
+            'name': get_param(event, class_='event__name'),
+            'date': get_param(event, class_='event__date'),
+            'location': get_param(event, class_='event__place'),
+            'price': get_param(event, class_='event__price'),
+            'link': 'https://concert.ua' + event['href'].replace('event', 'booking')
+        })
+    return event_info
