@@ -1,5 +1,5 @@
 import telebot
-
+import mongoengine
 
 from bot import botconfig
 from bot import parsing
@@ -11,11 +11,9 @@ CURRENT_STATE = DEFAULT_STATE
 LANGUAGE = None
 CHAT_ID = None
 EVENT_INFO = dict()
-TO_PARSE = None
 EVENT_INFO_SITE = []
-FOR_PARSE = None
 
-
+mongoengine.connect(botconfig.PROJECT_NAME)
 bot = telebot.TeleBot(botconfig.TOKEN)
 
 
