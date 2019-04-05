@@ -3,6 +3,7 @@ import mongoengine
 
 from bot import botconfig
 from bot import parsing
+from .db_model.user import User
 
 
 # TODO: store state in DB
@@ -24,16 +25,30 @@ def display_start(message):
     :param message:
     """
     global CURRENT_STATE, CHAT_ID
-    inline = telebot.types.InlineKeyboardMarkup()
-    rus = telebot.types.InlineKeyboardButton(text="Русский", callback_data='rus')
-    eng = telebot.types.InlineKeyboardButton(text="English", callback_data='eng')
-    ukr = telebot.types.InlineKeyboardButton(text="Українська", callback_data='ukr')
-    inline.add(rus, eng, ukr)
-    bot.send_message(message.chat.id, "Hello! \nI'm Ticket Bot. I was created to help you in ordering tickets!"
-                                      "\nPlease choose your language by clicking the button below."
-                                      "\nNOTE! I'm currently in development, so the only language supported is English"
-                                      , reply_markup=inline)
-    CHAT_ID = message.chat.id
+    try:
+        user = User.objects(user_id=message.chat.id).first()
+        if user is None:
+            user = User()
+            user.user_id = message.chat.id
+            user.username = str(message.from_user.username)
+            user.state = botconfig.State.S_START
+            user.first_name = message.from_user.first_name
+            user.last_name = message.from_user.last_name
+            user.save()
+
+        inline = telebot.types.InlineKeyboardMarkup()
+        rus = telebot.types.InlineKeyboardButton(text="Русский", callback_data='rus')
+        eng = telebot.types.InlineKeyboardButton(text="English", callback_data='eng')
+        ukr = telebot.types.InlineKeyboardButton(text="Українська", callback_data='ukr')
+        inline.add(rus, eng, ukr)
+        bot.send_message(message.chat.id, "Hello! \nI'm Ticket Bot. I was created to help you in ordering tickets!"
+                                          "\nPlease choose your language by clicking the button below."
+                                          "\nNOTE! I'm currently in development, so the only language supported is "
+                                          "English", reply_markup=inline)
+        CHAT_ID = message.chat.id
+    except Exception as e:
+        None
+
 
 
 @bot.message_handler(commands=['restart'])
